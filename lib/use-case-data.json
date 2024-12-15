@@ -1,0 +1,52 @@
+{
+    "status": 200,
+    "data": [
+      {
+        "name": "Course Template",
+        "description": "Perfect for creating structured course content with modules, lessons, and assignments",
+        "tags": ["blog", "writing", "personal"]
+      },
+      {
+        "name": "Research Lab",
+        "description": "Showcase your work and achievements with a clean, modern portfolio layout",
+        "tags": [ "Research", "professional"]
+      },
+      {
+        "name": "Blog Platform",
+        "description": "Create and manage your personal or professional blog with ease",
+        "tags": ["professional", "content"]
+      },
+      {
+        "name": "Event Website",
+        "description": "Organize and promote events with registration and scheduling",
+        "tags": ["soical", "courses"]
+      },
+      {
+        "name": "Documentation Site",
+        "description": "Create comprehensive documentation for your project or API",
+        "tags": ["documentation", "Research"]
+      },
+      {
+        "name": "Profesional Portfolio",
+        "description": "A professional website layout for businesses of any size.",
+        "tags": ["professional", "documentation"]
+      },
+      {
+        "name": "Documentation Site",
+        "description": "Create comprehensive documentation for your project or API",
+        "tags": ["documentation", "courses"] 
+      },
+      {
+        "name": "Event Registration",
+        "description": "Organize and promote events with registration and scheduling",
+        "tags": ["soical", "content"]
+      },
+      {
+        "name": "Community Forum",
+        "description": "Build an engaging community platform with discussions",
+        "tags": ["soical", "professional"]
+      }
+    ]
+  }
+  
+  
