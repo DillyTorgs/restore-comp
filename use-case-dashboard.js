@@ -25,6 +25,25 @@ class UseCaseDashboard extends DDDSuper(LitElement) {
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
 
+      .nav-links {
+        display: flex;
+        gap: 20px;
+      }
+
+      .nav-links a {
+        color: var(--ddd-theme-default-creekMaxLight);
+        text-decoration: none;
+        font-size: 16px;
+        padding: 8px 12px;
+        border-radius: 4px;
+        transition: all 0.2s ease;
+      }
+
+      .nav-links a:hover {
+        background-color: var(--ddd-theme-default-potential50);
+        color: white;
+      }
+
       .dashboard {
         display: flex;
         flex: 1;

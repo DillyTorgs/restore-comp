@@ -9,7 +9,7 @@
       {
         "name": "Research Lab",
         "description": "Showcase your work and achievements with a clean, modern portfolio layout",
-        "tags": [ "Research", "professional"]
+        "tags": ["Research", "professional"]
       },
       {
         "name": "Blog Platform",
@@ -19,7 +19,7 @@
       {
         "name": "Event Website",
         "description": "Organize and promote events with registration and scheduling",
-        "tags": ["soical", "courses"]
+        "tags": ["social", "courses"]
       },
       {
         "name": "Documentation Site",
@@ -32,21 +32,19 @@
         "tags": ["professional", "documentation"]
       },
       {
-        "name": "Documentation Site",
-        "description": "Create comprehensive documentation for your project or API",
-        "tags": ["documentation", "courses"] 
-      },
-      {
         "name": "Event Registration",
         "description": "Organize and promote events with registration and scheduling",
-        "tags": ["soical", "content"]
+        "tags": ["social", "content"]
       },
       {
         "name": "Community Forum",
         "description": "Build an engaging community platform with discussions",
-        "tags": ["soical", "professional"]
+        "tags": ["social", "professional"]
+      },
+      {
+        "name": "Online Learning Hub",
+        "description": "Create an interactive learning platform with integrated assessments and progress tracking",
+        "tags": ["courses", "content", "professional"]
       }
     ]
   }
-  
-  

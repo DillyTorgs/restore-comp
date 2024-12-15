@@ -37,23 +37,31 @@ class UseCaseFilter extends LitElement {
       }
 
       .filters {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 12px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
         margin-top: 12px;
       }
 
-      .filter-item {
-        display: flex;
-        align-items: center;
-        gap: 10px;
+      .filter-button {
+        padding: 6px 12px;
         font-size: 14px;
+        border: 1px solid var(--ddd-theme-default-slateMaxLight);
+        border-radius: 16px;
+        background: transparent;
         color: var(--ddd-theme-default-navy80);
         cursor: pointer;
+        transition: all 0.2s ease;
       }
 
-      .filter-item input[type="checkbox"] {
-        margin: 0;
+      .filter-button:hover {
+        background-color: var(--ddd-theme-default-potential10);
+      }
+
+      .filter-button.selected {
+        background-color: var(--ddd-theme-default-potential50);
+        color: white;
+        border-color: var(--ddd-theme-default-potential50);
       }
     `;
   }
@@ -70,7 +78,7 @@ class UseCaseFilter extends LitElement {
     super();
     this.filters = [];
     this.selectedFilters = [];
-    this.searchTerm = ""; // Tracks the user's search input
+    this.searchTerm = "";
   }
 
   handleSearchInput(event) {
@@ -78,6 +86,20 @@ class UseCaseFilter extends LitElement {
     this.dispatchEvent(
       new CustomEvent("search-term-changed", {
         detail: { searchTerm },
+        bubbles: true,
+        composed: true,
+      })
+    );
+  }
+
+  toggleFilter(filter) {
+    const newSelectedFilters = this.selectedFilters.includes(filter)
+      ? this.selectedFilters.filter(f => f !== filter)
+      : [...this.selectedFilters, filter];
+
+    this.dispatchEvent(
+      new CustomEvent("filters-changed", {
+        detail: { selectedFilters: newSelectedFilters },
         bubbles: true,
         composed: true,
       })
@@ -92,32 +114,18 @@ class UseCaseFilter extends LitElement {
           <input
             type="text"
             placeholder="Search cards..."
-            @input="${this.handleSearchInput}" <!-- Emit search-term-changed -->
+            @input="${this.handleSearchInput}"
           />
         </div>
         <div class="filters">
           ${this.filters.map(
             (filter) => html`
-              <div class="filter-item">
-                <input
-                  type="checkbox"
-                  value="${filter}"
-                  ?checked="${this.selectedFilters.includes(filter)}"
-                  @change="${(event) =>
-                    this.dispatchEvent(
-                      new CustomEvent("filters-changed", {
-                        detail: {
-                          selectedFilters: event.target.checked
-                            ? [...this.selectedFilters, filter]
-                            : this.selectedFilters.filter((f) => f !== filter),
-                        },
-                        bubbles: true,
-                        composed: true,
-                      })
-                    )}"
-                />
-                <label>${filter}</label>
-              </div>
+              <button
+                class="filter-button ${this.selectedFilters.includes(filter) ? 'selected' : ''}"
+                @click="${() => this.toggleFilter(filter)}"
+              >
+                ${filter}
+              </button>
             `
           )}
         </div>
