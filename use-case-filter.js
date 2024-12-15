@@ -11,7 +11,6 @@ class UseCaseFilter extends LitElement {
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         margin-bottom: 5px;
         font-family: var(--ddd-font-body, Arial, sans-serif);
-        
       }
 
       h3 {
@@ -19,7 +18,7 @@ class UseCaseFilter extends LitElement {
         font-size: 16px;
         font-weight: bold;
         color: var(--ddd-theme-default-skyBlue);
-        border-bottom: 2px solid var(--ddd-border-color, #e0e0e0);
+        border-bottom: 2px solid var(--ddd-theme-default-link);
         padding-bottom: 6px;
       }
 
@@ -33,7 +32,7 @@ class UseCaseFilter extends LitElement {
         flex: 1;
         padding: 8px;
         font-size: 14px;
-        border: 1px solid var(--ddd-border-color, #e0e0e0);
+        border: 1px solid var(--ddd-theme-default-slateMaxLight);
         border-radius: 5px;
       }
 
@@ -42,7 +41,6 @@ class UseCaseFilter extends LitElement {
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         gap: 12px;
         margin-top: 12px;
-        
       }
 
       .filter-item {
@@ -50,7 +48,7 @@ class UseCaseFilter extends LitElement {
         align-items: center;
         gap: 10px;
         font-size: 14px;
-        color: var(--ddd-theme-default-limestoneMaxLight);
+        color: var(--ddd-theme-default-navy80);
         cursor: pointer;
       }
 
@@ -75,30 +73,14 @@ class UseCaseFilter extends LitElement {
     this.searchTerm = ""; // Tracks the user's search input
   }
 
-  handleFilterChange(event) {
-    const filter = event.target.value;
-    if (event.target.checked) {
-      this.selectedFilters = [...this.selectedFilters, filter];
-    } else {
-      this.selectedFilters = this.selectedFilters.filter((f) => f !== filter);
-    }
+  handleSearchInput(event) {
+    const searchTerm = event.target.value.toLowerCase();
     this.dispatchEvent(
-      new CustomEvent("filters-changed", {
-        detail: { selectedFilters: this.selectedFilters },
+      new CustomEvent("search-term-changed", {
+        detail: { searchTerm },
         bubbles: true,
         composed: true,
       })
-    );
-  }
-
-  handleSearchInput(event) {
-    this.searchTerm = event.target.value.toLowerCase();
-  }
-
-  get filteredFilters() {
-    // Filters the filters list based on the search term
-    return this.filters.filter((filter) =>
-      filter.toLowerCase().includes(this.searchTerm)
     );
   }
 
@@ -109,19 +91,30 @@ class UseCaseFilter extends LitElement {
         <div class="search-bar">
           <input
             type="text"
-            placeholder="Search filters..."
-            @input="${this.handleSearchInput}"
+            placeholder="Search cards..."
+            @input="${this.handleSearchInput}" <!-- Emit search-term-changed -->
           />
         </div>
         <div class="filters">
-          ${this.filteredFilters.map(
+          ${this.filters.map(
             (filter) => html`
               <div class="filter-item">
                 <input
                   type="checkbox"
                   value="${filter}"
                   ?checked="${this.selectedFilters.includes(filter)}"
-                  @change="${this.handleFilterChange}"
+                  @change="${(event) =>
+                    this.dispatchEvent(
+                      new CustomEvent("filters-changed", {
+                        detail: {
+                          selectedFilters: event.target.checked
+                            ? [...this.selectedFilters, filter]
+                            : this.selectedFilters.filter((f) => f !== filter),
+                        },
+                        bubbles: true,
+                        composed: true,
+                      })
+                    )}"
                 />
                 <label>${filter}</label>
               </div>

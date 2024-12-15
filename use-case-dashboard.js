@@ -1,6 +1,7 @@
 import { LitElement, html, css } from "lit";
 import { DDDSuper } from "@haxtheweb/d-d-d";
 import "./use-case-card.js";
+import "./use-case-filter.js";
 
 class UseCaseDashboard extends DDDSuper(LitElement) {
   static get styles() {
@@ -15,7 +16,6 @@ class UseCaseDashboard extends DDDSuper(LitElement) {
         box-sizing: border-box;
       }
 
-      /* Header Styles */
       .header {
         display: flex;
         justify-content: space-between;
@@ -25,44 +25,6 @@ class UseCaseDashboard extends DDDSuper(LitElement) {
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
 
-      .header .logo {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-
-      .header .logo img {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-      }
-
-      .header .nav-links {
-        display: flex;
-        gap: 32px;
-        font-size: 30px;
-        font-weight: bold;
-        color: var(--ddd-theme-default-slateLight);
-      }
-
-      .header .nav-links a {
-        text-decoration: none;
-        color: inherit;
-        transition: color 0.3s;
-        color: var(--ddd-theme-default-slateLight);
-      }
-
-      .header .nav-links a:hover {
-        color: var(--ddd-theme-default-accent);
-      }
-
-      .header .account {
-        font-size: 10px;
-        font-weight: bold;
-        color: var(--ddd-theme-default-slateLight);
-      }
-
-      /* Dashboard Layout */
       .dashboard {
         display: flex;
         flex: 1;
@@ -78,27 +40,6 @@ class UseCaseDashboard extends DDDSuper(LitElement) {
         padding: 16px;
         border-radius: 12px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        
-      }
-
-      .filters h2 {
-        margin: 0 0 16px;
-        font-size: 18px;
-        color: var(--ddd-theme-default-potential50);
-        border-bottom: 1px solid var(--ddd-theme-default-slateMaxLight);
-        padding-bottom: 8px;
-      }
-
-      .filters label {
-        display: flex;
-        align-items: center;
-        margin-bottom: 12px;
-        font-size: 14px;
-        cursor: pointer;
-      }
-
-      .filters input[type="checkbox"] {
-        margin-right: 8px;
       }
 
       .cards {
@@ -106,6 +47,35 @@ class UseCaseDashboard extends DDDSuper(LitElement) {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 20px;
+      }
+
+      .nav-links a {
+        color: var(--ddd-theme-default-skyBlue);
+      }
+
+      .nav-links a:hover {
+        color: var(--ddd-theme-default-skyBlue);
+      }
+
+      .summary-section {
+        background-color: var(--ddd-theme-default-slateMaxLight);
+        color: var(--ddd-theme-default-limestoneGray);
+        padding: 24px;
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 24px;
+        font-family: var(--ddd-font-body, Arial, sans-serif);
+      }
+
+      .summary-section h1 {
+        font-size: 32px;
+        margin-bottom: 16px;
+        color: var(--ddd-theme-default-potential50);
+      }
+
+      .summary-section p {
+        font-size: 16px;
+        line-height: 1.5;
       }
 
       use-case-card {
@@ -129,6 +99,7 @@ class UseCaseDashboard extends DDDSuper(LitElement) {
       useCases: { type: Array },
       filteredUseCases: { type: Array },
       selectedFilters: { type: Array },
+      searchTerm: { type: String },
       results: { type: Number },
     };
   }
@@ -138,6 +109,7 @@ class UseCaseDashboard extends DDDSuper(LitElement) {
     this.useCases = [];
     this.filteredUseCases = [];
     this.selectedFilters = [];
+    this.searchTerm = "";
     this.results = 0;
     this.loadUseCaseData();
   }
@@ -156,65 +128,63 @@ class UseCaseDashboard extends DDDSuper(LitElement) {
     }
   }
 
+  handleFiltersChanged(event) {
+    this.selectedFilters = event.detail.selectedFilters;
+    this.filterUseCases();
+  }
+
+  handleSearchTermChanged(event) {
+    this.searchTerm = event.detail.searchTerm;
+    this.filterUseCases();
+  }
+
   filterUseCases() {
-    this.filteredUseCases = this.selectedFilters.length
-      ? this.useCases.filter((useCase) =>
-          this.selectedFilters.every((filter) => useCase.tags?.includes(filter))
-        )
-      : [...this.useCases];
+    this.filteredUseCases = this.useCases.filter((useCase) => {
+      const matchesTags = this.selectedFilters.length
+        ? this.selectedFilters.every((filter) => useCase.tags?.includes(filter))
+        : true;
+
+      const matchesSearch = this.searchTerm
+        ? useCase.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+          useCase.description.toLowerCase().includes(this.searchTerm.toLowerCase())
+        : true;
+
+      return matchesTags && matchesSearch;
+    });
 
     this.results = this.filteredUseCases.length;
   }
 
-  handleFilterChange(event) {
-    const filter = event.target.value;
-    this.selectedFilters = event.target.checked
-      ? [...this.selectedFilters, filter]
-      : this.selectedFilters.filter((f) => f !== filter);
-
-    this.filterUseCases();
-  }
-
-  generateFilters() {
-    const uniqueTags = [...new Set(this.useCases.flatMap((useCase) => useCase.tags || []))];
-    return uniqueTags.map(
-      (tag) => html`
-        <label>
-          <input
-            type="checkbox"
-            value="${tag}"
-            @change="${this.handleFilterChange}"
-          />
-          ${tag}
-        </label>
-      `
-    );
-  }
-
   render() {
     return html`
-      <!-- Header Section -->
       <div class="header">
         <div class="logo">
           <img src="https://avatars.githubusercontent.com/u/170651362?s=200&v=4" alt="HAX Logo" />
-          <span>Hax it</span>
         </div>
-
         <div class="nav-links">
           <a href="#">Merlin</a>
           <a href="#">Search Sites</a>
         </div>
-
         <div class="account">Account Name</div>
       </div>
 
-      <!-- Main Dashboard -->
-      <div class="filters"></div>
-      <div class="dashboard"> 
-        <h1>--Start your Journey--</h1>
-        
-          <h2>Filter</h2>
-          ${this.generateFilters()}
+      <!-- Summary Section -->
+      <div class="summary-section">
+        <h1>New Journey</h1>
+        <p>
+          Explore curated examples tailored to your needs. Use the filters and search 
+          functionality to quickly find the perfect match for your next project or idea.
+        </p>
+      </div>
+
+      <!-- Dashboard Section -->
+      <div class="dashboard">
+        <div class="filters">
+          <use-case-filter
+            .filters="${[...new Set(this.useCases.flatMap((useCase) => useCase.tags || []))]}"
+            @filters-changed="${this.handleFiltersChanged}"
+            @search-term-changed="${this.handleSearchTermChanged}" <!-- Add search event -->
+          ></use-case-filter>
         </div>
 
         <div class="cards">
