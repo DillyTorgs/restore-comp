@@ -28,6 +28,7 @@ class UseCaseDashboard extends DDDSuper(LitElement) {
       .dashboard {
         display: flex;
         flex: 1;
+        flex-direction: column;
         padding: 36px;
         gap: 24px;
         overflow-y: auto;
@@ -49,47 +50,25 @@ class UseCaseDashboard extends DDDSuper(LitElement) {
         gap: 20px;
       }
 
-      .nav-links a {
-        color: var(--ddd-theme-default-skyBlue);
-      }
-
-      .nav-links a:hover {
-        color: var(--ddd-theme-default-skyBlue);
-      }
-
-      .summary-section {
-        background-color: var(--ddd-theme-default-slateMaxLight);
-        color: var(--ddd-theme-default-limestoneGray);
-        padding: 24px;
-        border-radius: 12px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        margin-bottom: 24px;
-        font-family: var(--ddd-font-body, Arial, sans-serif);
-      }
-
-      .summary-section h1 {
-        font-size: 32px;
-        margin-bottom: 16px;
-        color: var(--ddd-theme-default-potential50);
-      }
-
-      .summary-section p {
+      .continue-button {
+        padding: 12px 24px;
         font-size: 16px;
-        line-height: 1.5;
-      }
-
-      use-case-card {
-        background: var(--ddd-theme-default-potential0);
-        border: 1px solid #ddd;
+        color: white;
+        background-color: var(--ddd-theme-default-potential50);
+        border: none;
         border-radius: 8px;
-        padding: 16px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        transition: transform 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        align-self: center;
       }
 
-      use-case-card:hover {
-        transform: scale(1.02);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+      .continue-button:hover {
+        background-color: var(--ddd-theme-default-potential60);
+      }
+
+      .continue-button:disabled {
+        background-color: var(--ddd-theme-default-limestoneGray);
+        cursor: not-allowed;
       }
     `;
   }
@@ -100,7 +79,7 @@ class UseCaseDashboard extends DDDSuper(LitElement) {
       filteredUseCases: { type: Array },
       selectedFilters: { type: Array },
       searchTerm: { type: String },
-      results: { type: Number },
+      selectedCard: { type: Object },
     };
   }
 
@@ -110,7 +89,7 @@ class UseCaseDashboard extends DDDSuper(LitElement) {
     this.filteredUseCases = [];
     this.selectedFilters = [];
     this.searchTerm = "";
-    this.results = 0;
+    this.selectedCard = null;
     this.loadUseCaseData();
   }
 
@@ -121,38 +100,52 @@ class UseCaseDashboard extends DDDSuper(LitElement) {
         const data = await response.json();
         this.useCases = data.data;
         this.filteredUseCases = [...this.useCases];
-        this.results = this.filteredUseCases.length;
       }
     } catch (error) {
       console.error("Error fetching use-case data:", error);
     }
   }
 
-  handleFiltersChanged(event) {
-    this.selectedFilters = event.detail.selectedFilters;
-    this.filterUseCases();
+  handleCardClick(useCase) {
+    this.selectedCard = useCase;
   }
 
-  handleSearchTermChanged(event) {
-    this.searchTerm = event.detail.searchTerm;
-    this.filterUseCases();
+  handleContinue() {
+    if (this.selectedCard) {
+      alert(`You selected: ${this.selectedCard.name}`);
+    }
   }
 
-  filterUseCases() {
-    this.filteredUseCases = this.useCases.filter((useCase) => {
-      const matchesTags = this.selectedFilters.length
-        ? this.selectedFilters.every((filter) => useCase.tags?.includes(filter))
-        : true;
+  handleSearchTermChanged(e) {
+    this.searchTerm = e.detail.searchTerm;
+    this.updateFilteredUseCases();
+  }
 
-      const matchesSearch = this.searchTerm
-        ? useCase.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-          useCase.description.toLowerCase().includes(this.searchTerm.toLowerCase())
-        : true;
+  handleFiltersChanged(e) {
+    this.selectedFilters = e.detail.selectedFilters;
+    this.updateFilteredUseCases();
+  }
 
-      return matchesTags && matchesSearch;
-    });
+  updateFilteredUseCases() {
+    let filtered = [...this.useCases];
 
-    this.results = this.filteredUseCases.length;
+    // Apply search filter
+    if (this.searchTerm) {
+      const searchLower = this.searchTerm.toLowerCase();
+      filtered = filtered.filter(useCase => 
+        useCase.name.toLowerCase().includes(searchLower) ||
+        useCase.description.toLowerCase().includes(searchLower)
+      );
+    }
+
+    // Apply tag filters
+    if (this.selectedFilters.length > 0) {
+      filtered = filtered.filter(useCase =>
+        this.selectedFilters.every(filter => useCase.tags?.includes(filter))
+      );
+    }
+
+    this.filteredUseCases = filtered;
   }
 
   render() {
@@ -168,22 +161,13 @@ class UseCaseDashboard extends DDDSuper(LitElement) {
         <div class="account">Account Name</div>
       </div>
 
-      <!-- Summary Section -->
-      <div class="summary-section">
-        <h1>New Journey</h1>
-        <p>
-          Explore curated examples tailored to your needs. Use the filters and search 
-          functionality to quickly find the perfect match for your next project or idea.
-        </p>
-      </div>
-
-      <!-- Dashboard Section -->
       <div class="dashboard">
         <div class="filters">
           <use-case-filter
             .filters="${[...new Set(this.useCases.flatMap((useCase) => useCase.tags || []))]}"
+            .selectedFilters="${this.selectedFilters}"
             @filters-changed="${this.handleFiltersChanged}"
-            @search-term-changed="${this.handleSearchTermChanged}" <!-- Add search event -->
+            @search-term-changed="${this.handleSearchTermChanged}"
           ></use-case-filter>
         </div>
 
@@ -194,10 +178,20 @@ class UseCaseDashboard extends DDDSuper(LitElement) {
                 title="${useCase.name}"
                 description="${useCase.description}"
                 demoLink="${useCase.demo_link}"
+                @click="${() => this.handleCardClick(useCase)}"
+                style="border: ${this.selectedCard?.name === useCase.name ? '2px solid var(--ddd-theme-default-potential50)' : 'none'};"
               ></use-case-card>
             `
           )}
         </div>
+
+        <button
+          class="continue-button"
+          ?disabled="${!this.selectedCard}"
+          @click="${this.handleContinue}"
+        >
+          Continue
+        </button>
       </div>
     `;
   }
