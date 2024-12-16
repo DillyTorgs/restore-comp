@@ -10,7 +10,7 @@ class UseCaseDashboard extends DDDSuper(LitElement) {
         display: flex;
         flex-direction: column;
         font-family: var(--ddd-font-navigation, Arial, sans-serif);
-        background-color: var(--ddd-theme-default-creekMaxLight);
+        background-color: var(--ddd-theme-default-white);
         color: var(--ddd-theme-default-limestoneGray);
         min-height: 100vh;
         box-sizing: border-box;
