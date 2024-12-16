@@ -10,7 +10,7 @@ class UseCaseDashboard extends DDDSuper(LitElement) {
         display: flex;
         flex-direction: column;
         font-family: var(--ddd-font-navigation, Arial, sans-serif);
-        background-color: var(--ddd-theme-default-white);
+        background-color: var(--ddd-theme-default-creekMaxLight);
         color: var(--ddd-theme-default-limestoneGray);
         min-height: 100vh;
         box-sizing: border-box;
@@ -25,23 +25,15 @@ class UseCaseDashboard extends DDDSuper(LitElement) {
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
 
-      .nav-links {
-        display: flex;
-        gap: 20px;
-      }
-
       .nav-links a {
-        color: var(--ddd-theme-default-creekMaxLight);
+        color: var(--ddd-theme-default-white);
         text-decoration: none;
-        font-size: 16px;
-        padding: 8px 12px;
-        border-radius: 4px;
-        transition: all 0.2s ease;
+        margin: 0 12px;
+        transition: color 0.2s;
       }
 
       .nav-links a:hover {
-        background-color: var(--ddd-theme-default-potential50);
-        color: white;
+        color: var(--ddd-theme-default-potential50);
       }
 
       .dashboard {
@@ -125,8 +117,14 @@ class UseCaseDashboard extends DDDSuper(LitElement) {
     }
   }
 
-  handleCardClick(useCase) {
-    this.selectedCard = useCase;
+  handleCardSelected(e) {
+    const { selected, title, description } = e.detail;
+    if (selected) {
+      this.selectedCard = { name: title, description };
+    } else if (this.selectedCard?.name === title) {
+      this.selectedCard = null;
+    }
+    this.requestUpdate();
   }
 
   handleContinue() {
@@ -148,7 +146,6 @@ class UseCaseDashboard extends DDDSuper(LitElement) {
   updateFilteredUseCases() {
     let filtered = [...this.useCases];
 
-    // Apply search filter
     if (this.searchTerm) {
       const searchLower = this.searchTerm.toLowerCase();
       filtered = filtered.filter(useCase => 
@@ -157,7 +154,6 @@ class UseCaseDashboard extends DDDSuper(LitElement) {
       );
     }
 
-    // Apply tag filters
     if (this.selectedFilters.length > 0) {
       filtered = filtered.filter(useCase =>
         this.selectedFilters.every(filter => useCase.tags?.includes(filter))
@@ -196,9 +192,8 @@ class UseCaseDashboard extends DDDSuper(LitElement) {
               <use-case-card
                 title="${useCase.name}"
                 description="${useCase.description}"
-                demoLink="${useCase.demo_link}"
-                @click="${() => this.handleCardClick(useCase)}"
-                style="border: ${this.selectedCard?.name === useCase.name ? '2px solid var(--ddd-theme-default-potential50)' : 'none'};"
+                .selected="${this.selectedCard?.name === useCase.name}"
+                @card-selected="${this.handleCardSelected}"
               ></use-case-card>
             `
           )}

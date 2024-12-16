@@ -13,34 +13,58 @@ class UseCaseFilter extends LitElement {
         font-family: var(--ddd-font-body, Arial, sans-serif);
       }
 
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+
       h3 {
-        margin: 0 0 12px;
+        margin: 0;
         font-size: 16px;
         font-weight: bold;
         color: var(--ddd-theme-default-skyBlue);
-        border-bottom: 2px solid var(--ddd-theme-default-link);
-        padding-bottom: 6px;
+      }
+
+      .reset-button {
+        padding: 6px 12px;
+        font-size: 14px;
+        color: var(--ddd-theme-default-potential50);
+        background: transparent;
+        border: 1px solid var(--ddd-theme-default-potential50);
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .reset-button:hover {
+        background-color: var(--ddd-theme-default-potential50);
+        color: white;
       }
 
       .search-bar {
-        margin-bottom: 12px;
-        display: flex;
-        align-items: center;
+        margin-bottom: 16px;
       }
 
       .search-bar input {
-        flex: 1;
-        padding: 8px;
+        width: 100%;
+        padding: 8px 12px;
         font-size: 14px;
         border: 1px solid var(--ddd-theme-default-slateMaxLight);
         border-radius: 5px;
+        transition: border-color 0.2s;
+      }
+
+      .search-bar input:focus {
+        outline: none;
+        border-color: var(--ddd-theme-default-potential50);
       }
 
       .filters {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
-        margin-top: 12px;
       }
 
       .filter-button {
@@ -51,7 +75,7 @@ class UseCaseFilter extends LitElement {
         background: transparent;
         color: var(--ddd-theme-default-navy80);
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.2s;
       }
 
       .filter-button:hover {
@@ -82,10 +106,10 @@ class UseCaseFilter extends LitElement {
   }
 
   handleSearchInput(event) {
-    const searchTerm = event.target.value.toLowerCase();
+    this.searchTerm = event.target.value;
     this.dispatchEvent(
       new CustomEvent("search-term-changed", {
-        detail: { searchTerm },
+        detail: { searchTerm: this.searchTerm },
         bubbles: true,
         composed: true,
       })
@@ -97,6 +121,7 @@ class UseCaseFilter extends LitElement {
       ? this.selectedFilters.filter(f => f !== filter)
       : [...this.selectedFilters, filter];
 
+    this.selectedFilters = newSelectedFilters;
     this.dispatchEvent(
       new CustomEvent("filters-changed", {
         detail: { selectedFilters: newSelectedFilters },
@@ -106,14 +131,45 @@ class UseCaseFilter extends LitElement {
     );
   }
 
+  resetFilters() {
+    this.selectedFilters = [];
+    this.searchTerm = "";
+    const searchInput = this.shadowRoot.querySelector('input');
+    if (searchInput) {
+      searchInput.value = "";
+    }
+    
+    this.dispatchEvent(
+      new CustomEvent("filters-changed", {
+        detail: { selectedFilters: [] },
+        bubbles: true,
+        composed: true,
+      })
+    );
+    
+    this.dispatchEvent(
+      new CustomEvent("search-term-changed", {
+        detail: { searchTerm: "" },
+        bubbles: true,
+        composed: true,
+      })
+    );
+  }
+
   render() {
     return html`
       <div>
-        <h3>Available Filters</h3>
+        <div class="header">
+          <h3>Available Filters</h3>
+          <button class="reset-button" @click="${this.resetFilters}">
+            Reset All
+          </button>
+        </div>
         <div class="search-bar">
           <input
             type="text"
             placeholder="Search cards..."
+            .value="${this.searchTerm}"
             @input="${this.handleSearchInput}"
           />
         </div>
