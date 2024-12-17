@@ -1,50 +1,59 @@
 {
-    "status": 200,
-    "data": [
-      {
-        "name": "Course Template",
-        "description": "Perfect for creating structured course content with modules, lessons, and assignments",
-        "tags": ["blog", "writing", "personal"]
-      },
-      {
-        "name": "Research Lab",
-        "description": "Showcase your work and achievements with a clean, modern portfolio layout",
-        "tags": ["Research", "professional"]
-      },
-      {
-        "name": "Blog Platform",
-        "description": "Create and manage your personal or professional blog with ease",
-        "tags": ["professional", "content"]
-      },
-      {
-        "name": "Event Website",
-        "description": "Organize and promote events with registration and scheduling",
-        "tags": ["social", "courses"]
-      },
-      {
-        "name": "Documentation Site",
-        "description": "Create comprehensive documentation for your project or API",
-        "tags": ["documentation", "Research"]
-      },
-      {
-        "name": "Profesional Portfolio",
-        "description": "A professional website layout for businesses of any size.",
-        "tags": ["professional", "documentation"]
-      },
-      {
-        "name": "Event Registration",
-        "description": "Organize and promote events with registration and scheduling",
-        "tags": ["social", "content"]
-      },
-      {
-        "name": "Community Forum",
-        "description": "Build an engaging community platform with discussions",
-        "tags": ["social", "professional"]
-      },
-      {
-        "name": "Online Learning Hub",
-        "description": "Create an interactive learning platform with integrated assessments and progress tracking",
-        "tags": ["courses", "content", "professional"]
-      }
-    ]
-  }
+  "status": 200,
+  "data": [
+    {
+      "name": "Course Template",
+      "description": "Perfect for creating structured course content with modules, lessons, and assignments",
+      "tags": ["blog", "writing", "personal"],
+      "imageURL": "https://images.unsplash.com/photo-1509062522246-3755977927d7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+    },
+    {
+      "name": "Research Lab",
+      "description": "Showcase your work and achievements with a clean, modern portfolio layout",
+      "tags": ["Research", "professional"],
+      "imageURL": "https://images.unsplash.com/photo-1507413245164-6160d8298b31?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+    },
+    {
+      "name": "Blog Platform",
+      "description": "Create and manage your personal or professional blog with ease",
+      "tags": ["professional", "content"],
+      "imageURL": "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+    },
+    {
+      "name": "Event Website",
+      "description": "Organize and promote events with registration and scheduling",
+      "tags": ["social", "courses"],
+      "imageURL": "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+    },
+    {
+      "name": "Documentation Site",
+      "description": "Create comprehensive documentation for your project or API",
+      "tags": ["documentation", "Research"],
+      "imageURL": "https://images.unsplash.com/photo-1456324504439-367cee3b3c32?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+    },
+    {
+      "name": "Professional Portfolio",
+      "description": "A professional website layout for businesses of any size.",
+      "tags": ["professional", "documentation"],
+      "imageURL": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+    },
+    {
+      "name": "Event Registration",
+      "description": "Organize and promote events with registration and scheduling",
+      "tags": ["social", "content"],
+      "imageURL": "https://images.unsplash.com/photo-1511578314322-379afb476865?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+    },
+    {
+      "name": "Community Forum",
+      "description": "Build an engaging community platform with discussions",
+      "tags": ["social", "professional"],
+      "imageURL": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+    },
+    {
+      "name": "Online Learning Hub",
+      "description": "Create an interactive learning platform with integrated assessments and progress tracking",
+      "tags": ["courses", "content", "professional"],
+      "imageURL": "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+    }
+  ]
+}

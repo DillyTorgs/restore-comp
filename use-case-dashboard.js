@@ -25,17 +25,6 @@ class UseCaseDashboard extends DDDSuper(LitElement) {
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
 
-      .nav-links a {
-        color: var(--ddd-theme-default-white);
-        text-decoration: none;
-        margin: 0 12px;
-        transition: color 0.2s;
-      }
-
-      .nav-links a:hover {
-        color: var(--ddd-theme-default-potential50);
-      }
-
       .dashboard {
         display: flex;
         flex: 1;
@@ -192,6 +181,7 @@ class UseCaseDashboard extends DDDSuper(LitElement) {
               <use-case-card
                 title="${useCase.name}"
                 description="${useCase.description}"
+                imageURL="${useCase.imageURL}"
                 .selected="${this.selectedCard?.name === useCase.name}"
                 @card-selected="${this.handleCardSelected}"
               ></use-case-card>
